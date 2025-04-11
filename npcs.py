@@ -1,30 +1,38 @@
-# npcs.py
-
 import random
 from transformers import pipeline
 
-generator = pipeline("text-generation", model="distilgpt2")
-
-def generate_text_local(prompt, max_length=100):
-    try:
-        output = generator(prompt, max_length=max_length)
-        return output[0]["generated_text"].strip()
-    except Exception as e:
-        print(f"Generation error: {e}")
-        return "..."
-
-def generate_npc_personality(name, species, traits):
-    prompt = f"Generate a personality description for {name}, a {species}, with the following traits: {traits}. Keep it to 2-3 sentences."
-    return generate_text_local(prompt)
-
-fey_names = ["Sylvanius", "Lirien", "Oberon", "Titania", "Puck"]
-fey_species = ["Pixie", "Satyr", "Dryad", "Sprite", "Redcap"]
+# Load the DistilGPT-2 pipeline for text generation
+generator = pipeline('text-generation', model='distilgpt2')
 
 def generate_npc():
-    name = random.choice(fey_names)
-    species = random.choice(fey_species)
-    traits = ", ".join(random.sample(["friendly", "mischievous", "wise", "mysterious", "greedy"], 3))
-    return f"{name} the {species}: {generate_npc_personality(name, species, traits)}"
+    """Generates a random NPC with name, species, and description."""
+
+    names = ["Elara", "Finn", "Lyra", "Orion", "Sylas"]
+    species = ["Pixie", "Eladrin", "Gnome", "Satyr", "Dryad"]
+    personalities = ["curious", "mischievous", "wise", "mysterious", "friendly"]
+
+    name = random.choice(names)
+    species_choice = random.choice(species)
+    personality = random.choice(personalities)
+
+    prompt = f"A {personality} {species_choice} named {name}."
+    description = generator(prompt, max_length=50, num_return_sequences=1)[0]['generated_text']
+
+    npc = {
+        "name": name,
+        "species": species_choice,
+        "description": description,
+    }
+
+    return npc
 
 def interact_with_npc():
-    print(generate_npc())
+    """Generates an NPC and displays their information."""
+    npc = generate_npc()
+    print(f"\nYou encounter {npc['name']}, a {npc['species']}.")
+    print(npc['description'])
+
+# Example of how to use the functions
+if __name__ == "__main__":
+    interact_with_npc()
+
