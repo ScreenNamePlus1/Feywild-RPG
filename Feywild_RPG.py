@@ -6,7 +6,11 @@ else:
     # Your module code goes here
     # functions, classes, etc.
     def example_function():
-        return "python feywild_rpg.py"
+        return "Run the Game:
+   * To run the main game file (feywild_rpg.py), type:
+     * python feywild_rpg.py
+   * If you want to run the text based console version, type:
+     * python feywild_rpg_console.py"
 
     # ... TO RUN, ROMOVE THE ERROR MESSAGE ABOVE ...
 
