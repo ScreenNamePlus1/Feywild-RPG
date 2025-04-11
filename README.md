@@ -99,3 +99,37 @@ The console version of the game allows you to execute Python code directly withi
 * `console.py`: Contains the in-game code execution logic.
 * `game_logic.py`: Contains the main game loop and input handling for the console version.
 
+
+Differences between both modes:
+
+1. feywild_rpg.py (Main Game File):
+ * Intended Functionality:
+   * This file is designed to be the main game entry point.
+   * It integrates all the game modules (locations, NPCs, monsters, etc.) and handles the core game logic.
+   * It is designed to be expanded to have a richer user interface, possibly a graphical user interface in the future.
+   * It is currently a text based interface, but is not designed to be a dedicated console application.
+ * Code Execution (Security Risk):
+   * As we discussed, the original version of this file included the execute_player_code function, which allowed players to execute arbitrary Python code.
+   * This is a major security risk and should be removed or replaced with proper sandboxing.
+ * Game Loop:
+   * It contains the main game loop, which handles player input, updates the game state, and displays game information.
+ * Module Integration:
+   * It imports and uses the other game modules to create the game world and its interactions.
+2. feywild_rpg_console.py (Console Version):
+ * Intended Functionality:
+   * This file is specifically designed to provide a text-based console interface for the game.
+   * It's a simplified version of the game that focuses on command-line interaction.
+   * It is designed to be a dedicated console application.
+ * Simplified Game Loop:
+   * It contains a basic while loop that prompts the user for input and calls the handle_input function from game_logic.py.
+ * game_logic.py Dependency:
+   * It relies on the game_logic.py module to handle the actual game logic, separating the console interface from the game's core mechanics.
+ * Text-Based Interaction:
+   * It's designed for players who prefer a text-based experience and want to interact with the game through commands.
+In Summary:
+ * feywild_rpg.py is the main game file, meant to be more expandable, and to handle all of the game logic.
+ * feywild_rpg_console.py is a simplified, console-specific version that provides a text-based interface.
+ * Both versions, at this point, are text based, but feywild_rpg.py is designed to be able to be expanded into a more complex application.
+ * feywild_rpg_console.py relies on game_logic.py to separate the user interface from the game logic.
+Therefore, you would run feywild_rpg_console.py if you want a dedicated command line experience, and run feywild_rpg.py if you want to run the main game file.
+
