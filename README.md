@@ -56,3 +56,46 @@ the power of hope in the face of overwhelming darkness.
 It captures the whimsical and dangerous nature of the Feywild, where the lines between
 reality and illusion are blurred, and where the fate of the land rests on the shoulders
 of those who dare to resist.
+
+Friday, April 11th, 2025
+
+# Feywild-RPG
+
+A text-based RPG set in the magical and unpredictable Feywild.
+
+## Running the Game
+
+There are now two ways to run the game:
+
+* **Original Version:**
+    ```bash
+    python feywild_rpg.py
+    ```
+* **Console Version (In-Game Code Execution):**
+    ```bash
+    python feywild_rpg_console.py
+    ```
+
+## In-Game Console
+
+The console version of the game allows you to execute Python code directly within the game. This opens up possibilities for customizing your gameplay and experimenting with the game world.
+
+### Example Usage:
+
+* To add an item to your inventory:
+    ```
+    > game['add_item']('Feywild Flower')
+    ```
+* To decrease your player health:
+    ```
+    > game['player_health'] -= 10
+    ```
+
+## File Structure:
+
+* `feywild_rpg.py`: The original game logic.
+* `feywild_rpg_console.py`: The launcher for the console version.
+* `game_data.py`: Contains game state and data.
+* `console.py`: Contains the in-game code execution logic.
+* `game_logic.py`: Contains the main game loop and input handling for the console version.
+
