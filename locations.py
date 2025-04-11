@@ -1,98 +1,110 @@
-# Feywild-RPG: A Text-Based Adventure with Enhanced Terminal Interaction
+locations = {
+    "court_of_seasons": {
+        "name": "The Court of Seasons",
+        "description": "A grand, ever-shifting palace that reflects the current season. In Summer, it's a sun-drenched garden; in Winter, an ice palace. The air hums with potent magic and political intrigue.",
+        "items": ["a seasonal flower", "a court invitation"],
+        "exits": {
+            "eldertree_forest": "Eldertree Forest",
+            "crystal_labyrinth": "Crystal Labyrinth",
+            "myth_drannor": "Myth Drannor"
+        }
+    },
+    "eldertree_forest": {
+        "name": "The Eldertree Forest",
+        "description": "An ancient, primeval forest filled with towering trees, glowing flora, and primal creatures. The air is thick with raw, untamed magic.",
+        "items": ["ancient bark", "a primal feather"],
+        "exits": {
+            "court_of_seasons": "Court of Seasons",
+            "crystal_labyrinth": "Crystal Labyrinth",
+            "river_of_dreams": "River of Dreams",
+            "whispering_glade": "Whispering Glade",
+            "ancient_barrow": "Ancient Barrow",
+            "wild_hills": "Wild Hills"
+        }
+    },
+    "crystal_labyrinth": {
+        "name": "The Crystal Labyrinth",
+        "description": "A vast, ever-shifting maze made of shimmering crystal and illusions. It's a place of trials, tests, and hidden rewards.",
+        "items": ["a crystal shard", "a map of shifting paths"],
+        "exits": {
+            "court_of_seasons": "Court of Seasons",
+            "eldertree_forest": "Eldertree Forest",
+            "shifting_city": "Shifting City",
+            "clockwork_city": "Clockwork City",
+            "whispering_plains": "Whispering Plains"
+        }
+    },
+    "river_of_dreams": {
+        "name": "The River of Dreams",
+        "description": "A magical river that flows through the Feywild, carrying dreams, memories, and emotions. Its waters shimmer with ethereal light.",
+        "items": ["a dream-woven thread", "a memory stone"],
+        "exits": {
+            "eldertree_forest": "Eldertree Forest",
+            "shifting_city": "Shifting City",
+            "glowing_fen": "Glowing Fen"
+        }
+    },
+    "shifting_city": {
+        "name": "The Shifting City",
+        "description": "A city of constant change, with buildings that morph and streets that lead to unexpected places. Its inhabitants are as unpredictable as the city itself.",
+        "items": ["a shifting ornament", "a map of the city's current layout"],
+        "exits": {
+            "crystal_labyrinth": "Crystal Labyrinth",
+            "river_of_dreams": "River of Dreams",
+            "glowing_fen": "Glowing Fen"
+        }
+    },
+    "whispering_glade":{
+        "name": "The Whispering Glade",
+        "description": "a small clearing within the Eldertree forest, where the trees seem to whisper secrets.",
+        "items": ["a whispering leaf"],
+        "exits": {
+            "eldertree_forest": "Eldertree Forest"
+        }
+    },
+    "ancient_barrow":{
+        "name": "The Ancient Barrow",
+        "description": "an ancient burial mound within the Eldertree forest, where ancient fey spirits are said to linger.",
+        "items": ["an ancient bone"],
+        "exits": {
+            "eldertree_forest": "Eldertree Forest"
+        }
+    },
+    "glowing_fen": {
+        "name": "The Glowing Fen",
+        "description": "A swampy area filled with bioluminescent flora and strange, croaking sounds. The air is thick with mist and the scent of damp earth.",
+        "items": ["glowing reeds", "a waterlogged journal"],
+        "exits": {"wild_hills": "Wild Hills", "shifting_city": "Shifting City", "river_of_dreams": "River of Dreams"},
+    },
+    "wild_hills": {
+        "name": "The Wild Hills",
+        "description": "Rolling hills covered in vibrant wildflowers and ancient standing stones. The wind carries whispers of forgotten songs.",
+        "items": ["a handful of wildflowers", "a smooth, grey stone"],
+        "exits": {"glowing_fen": "Glowing Fen", "eldertree_forest": "Eldertree Forest", "clockwork_city": "Clockwork City"},
+    },
+    "whispering_plains":{
+        "name": "The Whispering Plains",
+        "description": "A vast, open plain where tall, golden grass sways in the wind. Faint, ethereal whispers seem to emanate from the ground itself.",
+        "items": ["a golden grass stalk", "a small, smooth stone"],
+        "exits": {"glimmering_bazaar": "Glimmering Bazaar", "crystal_labyrinth": "Crystal Labyrinth"}
+    },
+    "myth_drannor": {
+        "name": "Myth Drannor",
+        "description": "A city of ancient eladrin magic, its towers shimmering with arcane energy. The air is filled with the sound of music and the scent of exotic flowers.",
+        "items": ["an eladrin artifact", "a magical scroll"],
+        "exits": {"court_of_seasons": "Court of Seasons", "glowing_fen": "Glowing Fen"},
+    },
+    "glimmering_bazaar": {
+        "name": "The Glimmering Bazaar",
+        "description": "A bustling marketplace where faeries and other Feywild creatures trade strange and wondrous goods. The air is alive with the chatter of merchants and the scent of exotic spices.",
+        "items": ["a shimmering silk scarf", "a bottle of starlight"],
+        "exits": {"whispering_plains": "Whispering Plains"},
+    },
+    "clockwork_city": {
+        "name": "Clockwork City",
+        "description": "A city built with intricate clockwork mechanisms, and full of gnome contraptions. The city is full of the sounds of gears, and steam.",
+        "items": ["a clockwork gear", "a blueprint"],
+        "exits": {"crystal_labyrinth": "Crystal Labyrinth", "wild_hills": "Wild Hills"}
+    }
+}
 
-Embark on a captivating journey into the Feywild, a realm of magic, mystery, and unpredictable creatures. This text-based adventure game combines engaging exploration, dynamic NPC interactions, and thrilling monster encounters, all enhanced by a custom terminal interface and modular design.
-
-## Features
-
-* **Exploration:** Traverse diverse locations, each with unique descriptions, items, and exits.
-* **NPC Interactions:** Engage with procedurally generated fey creatures, each with distinct personalities.
-* **Monster Encounters:** Battle a variety of monsters, each with unique abilities and descriptions.
-* **Local Text Generation:** Uses DistilGPT-2 for dynamic NPC and monster descriptions.
-* **Enhanced Terminal Interface:** Utilizes a custom terminal module for improved user experience.
-* **Modular Design:** Organized into separate modules for locations, items, NPCs, monsters, and game logic.
-
-## Project Structure
-
-* `feywild_rpg.py`: Main game file, integrating all modules and handling game logic.
-* `locations.py`: Defines locations, their descriptions, items, and exits.
-* `items.py`: Defines items and their properties.
-* `npcs.py`: Generates and manages NPC interactions.
-* `monsters.py`: Generates and manages monster encounters.
-* `terminal_utils.py`: Provides enhanced terminal functions for improved user experience.
-* `utils.py`: contains helper functions.
-* `README.md`: Project documentation.
-* `LICENSE`: MIT License file.
-
-## Installation
-
-1.  **Clone the Repository:**
-
-    ```bash
-    git clone [https://github.com/ScreenNamePlus1/Feywild-RPG.git](https://github.com/ScreenNamePlus1/Feywild-RPG.git)
-    ```
-
-2.  **Navigate to the Project Directory:**
-
-    ```bash
-    cd Feywild-RPG
-    ```
-
-3.  **Install Dependencies:**
-
-    ```bash
-    pip install transformers
-    ```
-
-## Usage
-
-1.  **Run the Game:**
-
-    ```bash
-    python feywild_rpg.py
-    ```
-
-2.  **Interact with the Game:**
-
-    * Follow the on-screen prompts to navigate and interact with the Feywild.
-    * Use the commands listed below to explore, talk, and fight.
-
-## Commands
-
-* `move [direction]`: Move to a different location. Example: `move north`.
-* `talk`: Interact with a randomly generated NPC.
-* `fight`: Encounter a randomly generated monster.
-* `quit`: Exit the game.
-
-## Module Descriptions
-
-* **`locations.py`:**
-    * Defines the game's locations as dictionaries, including their names, descriptions, items, and exits.
-    * Allows for easy expansion and modification of the game world.
-* **`items.py`:**
-    * Defines items with their properties, such as names and descriptions.
-    * Provides a structured way to manage in-game items.
-* **`npcs.py`:**
-    * Generates NPCs with random names, species, and personality traits.
-    * Uses the `transformers` library to generate dynamic NPC descriptions.
-* **`monsters.py`:**
-    * Generates monsters with random names, habitats, and abilities.
-    * Uses the `transformers` library to generate dynamic monster descriptions.
-* **`terminal_utils.py`:**
-    * Provides functions for clearing the terminal, displaying text with delays, and other terminal enhancements.
-    * Improves the user experience by adding visual effects and interactivity.
-* **`utils.py`:**
-    * Contains helper functions that are used by various modules.
-
-## Notes
-
-* This game uses a local language model (DistilGPT-2) for text generation. The quality of the generated text may vary.
-* Performance may be slow on resource-constrained devices.
-* This game is under active development.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit pull requests or open issues.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
