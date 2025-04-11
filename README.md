@@ -1,5 +1,5 @@
 it's a work in progress so don't expect it to be bug free yet. 
-I just started. 
+I just started. I am eventually going to put every single Monster in D&D 3.5 in this game. if it takes me another 40 years I'm going to do it. I'm also going to include a bunch of other stuff for combat and cities. the point of this is to be able to interact with miniatures. I'm sure they'll think of some interesting features. if you have any suggestions drop me a line at screenname+1@gmail.com. I will probably definitely add them.
 this is based on D&D 3.5 and it is set in the Feywild.
 Here's a description of the Feywild text-based RPG 
 we've been building: 
