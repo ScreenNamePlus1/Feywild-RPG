@@ -1,3 +1,15 @@
+if __name__ == "__main__":
+    print("Error: OLDER VERSION. YOU CAN RUN IT BUT IT'S A DIFFERENT GAME THAT I OVERHAULED. THIS IS JUST A RESIDUAL FILE.")
+    #or
+    raise ImportError("OLDER VERSION. YOU CAN RUN IT BUT IT'S A DIFFERENT GAME THAT I OVERHAULED. THIS IS JUST A RESIDUAL FILE.")
+else:
+    # Your module code goes here
+    # functions, classes, etc.
+    def example_function():
+        return "python feywild_rpg.py"
+
+    # ... TO RUN, ROMOVE THE ERROR MESSAGE ABOVE ...
+
 import random
 import json
 
