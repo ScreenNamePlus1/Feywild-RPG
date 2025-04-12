@@ -68,6 +68,9 @@ class StatusEffect:
         else:
             print(f"{self.name} doesn't have enough mana!")
 
+    class Character:
+    # ... your existing Character class code ...
+
     def show_quests(self):
         if self.quests:
             print("Active Quests:")
