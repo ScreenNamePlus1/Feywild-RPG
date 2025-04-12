@@ -9,7 +9,7 @@ def save_game(player_character, current_location, filename):
     }
     try:
         with open(filename, "w") as f:
-            json.dump(game_data, f)
+            json.dump(game_data, f, indent=4)  # Add indent for readability
         print(f"Game saved to {filename}.")
     except Exception as e:
         print(f"Error saving game: {e}")
