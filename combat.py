@@ -1,11 +1,12 @@
-import random
 import game_logic
 import monsters
+import random
 
 def attack(attacker, defender):
     damage = game_logic.calculate_damage(attacker, defender)
     defender["stats"]["health"] -= damage
     print(f"{attacker['name']} attacks {defender['name']} for {damage} damage!")
+    print(f"{defender['name']}'s health: {defender['stats']['health']}")
     if game_logic.is_defeated(defender):
         print(f"{defender['name']} has been defeated!")
     return defender
