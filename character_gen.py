@@ -1,5 +1,5 @@
 import random
-
+l
 def generate_ability_scores():
     # ... (same as before) ...
 
@@ -10,7 +10,7 @@ def create_character():
         "xp": 0,
         "level": 1,
         "inventory": ["basic equipment"],
-    }
+    }ll
     return character
 
 def level_up(character):
