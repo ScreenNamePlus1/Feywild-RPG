@@ -348,6 +348,7 @@ npc_dialogue = {
         },
         "personality": "wise and cautious",
         "relationship": {"other_npcs": ["Sylvane Shadowbrook"], "disposition": "friendly"},
+        "farewells": ["May the stars guide your path.", "Farewell, traveler.", "Be safe on your journey.", "The forest watches you."]
     },
     "Bram Stoneheart": {
         "dialogue": [
@@ -370,48 +371,56 @@ npc_dialogue = {
         },
         "personality": "gruff and wary",
         "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Hmph. Be off.", "Don't come back.", "Watch your step.", "Leave me be."]
     },
     "Lyra Silverleaf": {
         "dialogue": ["The flowers are dying, and the trees are weeping.", "The dark energy is spreading.", "We need help."],
         "quest": None,
         "personality": "sad and concerned",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Please be careful.", "I hope you find peace.", "The feywild is in danger.", "May the light protect you."]
     },
     "Kaelen Nightshade": {
         "dialogue": ["I used to be a guardian, but now I'm lost.", "The corruption has taken everything.", "Leave while you can."],
         "quest": None,
         "personality": "melancholy",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Go now, while you still can.", "The shadows will consume you.", "I cannot help you.", "Beware the darkness."]
     },
     "Nimue Sunstrider": {
         "dialogue": ["Hope is not lost, traveler. We can still fight.", "The ancient magic still lives.", "Join us."],
         "quest": None,
         "personality": "hopeful",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Fight with us!", "We will not surrender.", "The light will guide us.", "May your spirit remain strong."]
     },
     "Torvin Ironbark": {
         "dialogue": ["The earth trembles, and the shadows grow long.", "We must stand together.", "Are you with us?"],
         "quest": None,
         "personality": "strong and determined",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Stand strong, traveler.", "The earth will protect you.", "We will prevail.", "Go with my blessing."]
     },
     "Anya Moonwhisper": {
         "dialogue": ["The stars weep for the feywild.", "The darkness threatens to consume us all.", "Find the light."],
         "quest": None,
         "personality": "mystical",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["The stars will guide you.", "Seek the hidden paths.", "The moon will watch over you.", "May your dreams be filled with light."]
     },
     "Rylan Thornwood": {
         "dialogue": ["I know the secrets of these woods.", "The Drow are not the only threat.", "There is something worse."],
         "quest": None,
         "personality": "secretive",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["I have told you too much.", "Leave these woods.", "The secrets are not safe.", "Go now, and forget what you have learned."]
     },
     "Elara Emberglow": {
         "dialogue": ["The fire of the feywild still burns.", "We will not surrender.", "Fight with us."],
         "quest": None,
         "personality": "fiery",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Burn with the fire of the feywild!", "We will not be extinguished.", "Fight for the light!", "May your heart burn brightly."]
     }
 }
 
@@ -437,6 +446,7 @@ def interact_npc(player, npc_name):
         if choice == "1":
             print(random.choice(npc_dialogue[npc_name]["dialogue"]))
         else:
+            print(f"{npc_name}: '{random.choice(npc_dialogue[npc_name]['farewells'])}'")
             print("You move on.")
     else:
         print(f"{npc_name}: 'I have nothing to say to you.'")
