@@ -21,7 +21,7 @@ class Character:
         self.inventory = []
         self.mana = mana
         self.abilities = []
-        self.quests = []  # Added quest log
+        self.quests = []
 
     def attack(self, target):
         attack_roll = random.randint(1, 20) + self.strength
@@ -123,70 +123,122 @@ def magic_missile(user, target):
     print(f"{target.name} takes {damage} damage from magic missile.")
 
 # Game World and Navigation
-world_map = {
-    "Grove": {
-        "description": "A peaceful grove, ancient trees surround you. The air is thick with magic. Suddenly, a dark energy tears through the trees!",
-        "north": "Thicket",
-        "east": "Path",
-        "west": "Dark Grove",
-        "encounters": ["goblin", "orc"],
-        "npcs": ["Faelar", "Sylvane"],
-        "coordinates": (0, 0),
-        "stability": 0.8,
-        "visited": False,
-    },
-    "Thicket": {
-        "description": "A dense thicket, thorns and vines block your path. The light is dim.",
-        "south": "Grove",
-        "east": "Ruins",
-        "encounters": ["goblin"],
-        "npcs": [],
-        "coordinates": (0, 1),
-        "stability": 0.5,
-        "visited": False,
-    },
-    "Path": {
-        "description": "A winding path, leading through the forest. The sounds of nature fill the air.",
-        "west": "Grove",
-        "east": "Meadow",
-        "encounters": ["orc"],
-        "npcs": ["Bram"],
-        "coordinates": (1, 0),
-        "stability": 0.7,
-        "visited": False,
-    },
-    "Dark Grove": {
-        "description": "A dark grove, the trees here are twisted and corrupted. A sense of dread fills you.",
-        "east": "Grove",
-        "encounters": ["goblin", "orc"],
-        "npcs": [],
-        "coordinates": (-1, 0),
-        "stability": 0.3,
-        "visited": False,
-    },
-    "Ruins": {
-        "description": "Ancient ruins, overgrown with vines. The stones whisper of forgotten magic.",
-        "west": "Thicket",
-        "south": "Meadow",
-        "encounters": ["orc"],
-        "npcs": [],
-        "coordinates": (1, 1),
-        "stability": 0.6,
-        "visited": False,
-    },
-    "Meadow": {
-        "description": "A wide open meadow, with tall waving grasses, and flowers that glow with a faint light.",
-        "north": "Ruins",
-        "west": "Path",
-        "encounters": ["goblin"],
-        "npcs": [],
-        "coordinates": (2, 0),
-        "stability": 0.9,
-        "visited": False,
-    },
+MAP_WIDTH = 20
+MAP_HEIGHT = 20
+
+world_map = [[None for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
+
+world_map[5][5] = {
+    "name": "Grove",
+    "description": "A peaceful grove, ancient trees surround you. The air is thick with magic. Suddenly, a dark energy tears through the trees!",
+    "connections": {"north": (5, 6), "east": (6, 5), "west": (4, 5), "south": (5,4)},
+    "encounters": ["goblin", "orc"],
+    "npcs": ["Faelar", "Sylvane"],
+    "stability": 0.8,
+    "visited": False,
 }
 
-current_location = "Grove"
+world_map[5][6] = {
+    "name": "Thicket",
+    "description": "A dense thicket, thorns and vines block your path. The light is dim.",
+    "connections": {"south": (5, 5), "east": (6, 6)},
+    "encounters": ["goblin"],
+    "npcs": [],
+    "stability": 0.5,
+    "visited": False,
+}
+
+world_map[6][5] = {
+    "name": "Path",
+    "description": "A winding path, leading through the forest. The sounds of nature fill the air.",
+    "connections": {"west": (5, 5), "east": (7, 5)},
+    "encounters": ["orc"],
+    "npcs": ["Bram"],
+    "stability": 0.7,
+    "visited": False,
+}
+
+world_map[4][5] = {
+    "name": "Dark Grove",
+    "description": "A dark grove, the trees here are twisted and corrupted. A sense of dread fills you.",
+    "connections": {"east": (5, 5)},
+    "encounters": ["goblin", "orc"],
+    "npcs": [],
+    "stability": 0.3,
+    "visited": False,
+}
+
+world_map[6][6] = {
+    "name": "Ruins",
+    "description": "Ancient ruins, overgrown with vines. The stones whisper of forgotten magic.",
+    "connections": {"west": (5, 6), "south": (7,5)},
+    "encounters": ["orc"],
+    "npcs": [],
+    "stability": 0.6,
+    "visited": False,
+}
+
+world_map[7][5] = {
+    "name": "Meadow",
+    "description": "A wide open meadow, with tall waving grasses, and flowers that glow with a faint light.",
+    "connections": {"north": (6,6), "west": (6, 5)},
+    "encounters": ["goblin"],
+    "npcs": [],
+    "stability": 0.9,
+    "visited": False,
+}
+
+world_map[2][2] = {
+    "name": "Titania's Bower",
+    "description": "A serene glade, filled with vibrant flowers and gentle streams. The air shimmers with fae magic.",
+    "connections": {},
+    "encounters": [],
+    "npcs": [],
+    "stability": 0.9,
+    "visited": False,
+}
+
+world_map[2][3] = {
+    "name": "Oberon's Grotto",
+    "description": "A hidden cave, adorned with glowing crystals and whispering waterfalls. The air is thick with mystery.",
+    "connections": {},
+    "encounters": [],
+    "npcs": [],
+    "stability": 0.8,
+    "visited": False,
+}
+
+world_map[8][10] = {
+    "name": "The Dead Forest",
+    "description": "A desolate forest, where gnarled trees reach out like skeletal fingers. The air is heavy with a sense of dread.",
+    "connections": {},
+    "encounters": ["shadow creature", "wraith"],
+    "npcs": [],
+    "stability": 0.4,
+    "visited": False,
+}
+
+world_map[10][10] = {
+    "name": "Crystal Caves",
+    "description": "A labyrinth of shimmering crystal formations, echoing with the sounds of dripping water and unseen whispers.",
+    "connections": {},
+    "encounters": ["crystal golem", "fae spirit"],
+    "npcs": [],
+    "stability": 0.6,
+    "visited": False,
+}
+
+world_map[15][5] = {
+    "name": "Desert of the Sphinx",
+    "description": "A vast desert, where the sands shift and whisper secrets. The air shimmers with heat and illusion.",
+    "connections": {},
+    "encounters": ["sphinx", "sand elemental"],
+    "npcs": [],
+    "stability": 0.2,
+    "visited": False,
+}
+
+current_location = (5, 5)
 
 # NPC Names
 first_names = ["Faelar", "Sylvane", "Bram", "Lyra", "Kaelen", "Nimue", "Torvin", "Anya", "Rylan", "Elara"]
@@ -196,13 +248,17 @@ def generate_npc_name():
     return random.choice(first_names) + " " + random.choice(last_names)
 
 def shift_locations():
-    for location_name, location_data in world_map.items():
-        if random.random() > location_data["stability"]:
-            x, y = location_data["coordinates"]
-            dx = random.randint(-1, 1)
-            dy = random.randint(-1, 1)
-            location_data["coordinates"] = (x + dx, y + dy)
-            print(f"{location_name} shifts slightly.")
+    for y in range(MAP_HEIGHT):
+        for x in range(MAP_WIDTH):
+            location = world_map[y][x]
+            if location and random.random() > location["stability"]:
+                dx = random.randint(-1, 1)
+                dy = random.randint(-1, 1)
+                new_x, new_y = x + dx, y + dy
+                if 0 <= new_x < MAP_WIDTH and 0 <= new_y < MAP_HEIGHT and not world_map[new_y][new_x]:
+                    world_map[new_y][new_x] = location
+                    world_map[y][x] = None
+                    print(f"{location['name']} shifts slightly.")
 
 def calculate_distance(coord1, coord2):
     x1, y1 = coord1
@@ -211,22 +267,22 @@ def calculate_distance(coord1, coord2):
 
 def explore(player):
     global current_location
-    location = world_map[current_location]
+    location = world_map[current_location[1]][current_location[0]]
     print(location["description"])
 
     location["visited"] = True
 
-    directions = [d for d in ["north", "east", "west", "south"] if d in location]
-
+    directions = location["connections"]
     if directions:
         for i, direction in enumerate(directions):
-            next_location = world_map[location[direction]]
-            distance = calculate_distance(location["coordinates"], next_location["coordinates"])
+            next_coord = directions[direction]
+            next_location = world_map[next_coord[1]][next_coord[0]]
+            distance = calculate_distance(current_location, next_coord)
             print(f"{i + 1}. Go {direction.capitalize()} (Distance: {distance:.2f}).")
         choice = input("> ")
         try:
-            direction_choice = directions[int(choice) - 1]
-            current_location = location[direction_choice]
+            direction_choice = list(directions.keys())[int(choice) - 1]
+            current_location = directions[direction_choice]
         except (ValueError, IndexError):
             print("Invalid choice.")
     else:
@@ -245,7 +301,7 @@ def explore(player):
             npc_name = generate_npc_name()
             interact_npc(player, npc_name)
 
-    print(f"Current Coordinates: {location['coordinates']}")
+    print(f"Current Coordinates: {current_location}")
     shift_locations()
 
 def load_monster_data():
@@ -554,8 +610,8 @@ def main():
         if choice == "1":
             explore(player)
         elif choice == "2":
-            location = world_map[current_location]
-            if location["npcs"]:
+            location = world_map[current_location[1]][current_location[0]]
+            if location and location["npcs"]:
                 npc_name = generate_npc_name()
                 interact_npc(player, npc_name)
             else:
@@ -566,8 +622,12 @@ def main():
             for item in player.inventory:
                 print(f"- {item.name}: {item.description}")
         elif choice == "4":
-            enemy = create_enemy(random.choice(["goblin", "orc"]))
-            combat(player, enemy)
+            location = world_map[current_location[1]][current_location[0]]
+            if location and location["encounters"]:
+                enemy = create_enemy(random.choice(location["encounters"]))
+                combat(player, enemy)
+            else:
+                print("There are no enemies here.")
         elif choice == "5":
             player.show_quests()
         elif choice == "6":
