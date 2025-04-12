@@ -137,7 +137,106 @@ world_map[5][5] = {
     "stability": 0.8,
     "visited": False,
 }
-# ... (Other World Map Locations) ...
+
+world_map[5][6] = {
+    "name": "Thicket",
+    "description": "A dense thicket, thorns and vines block your path. The light is dim.",
+    "connections": {"south": (5, 5), "east": (6, 6)},
+    "encounters": ["goblin"],
+    "npcs": [],
+    "stability": 0.5,
+    "visited": False,
+}
+
+world_map[6][5] = {
+    "name": "Path",
+    "description": "A winding path, leading through the forest. The sounds of nature fill the air.",
+    "connections": {"west": (5, 5), "east": (7, 5)},
+    "encounters": ["orc"],
+    "npcs": ["Bram"],
+    "stability": 0.7,
+    "visited": False,
+}
+
+world_map[4][5] = {
+    "name": "Dark Grove",
+    "description": "A dark grove, the trees here are twisted and corrupted. A sense of dread fills you.",
+    "connections": {"east": (5, 5)},
+    "encounters": ["goblin", "orc"],
+    "npcs": [],
+    "stability": 0.3,
+    "visited": False,
+}
+
+world_map[6][6] = {
+    "name": "Ruins",
+    "description": "Ancient ruins, overgrown with vines. The stones whisper of forgotten magic.",
+    "connections": {"west": (5, 6), "south": (7,5)},
+    "encounters": ["orc"],
+    "npcs": [],
+    "stability": 0.6,
+    "visited": False,
+}
+
+world_map[7][5] = {
+    "name": "Meadow",
+    "description": "A wide open meadow, with tall waving grasses, and flowers that glow with a faint light.",
+    "connections": {"north": (6,6), "west": (6, 5)},
+    "encounters": ["goblin"],
+    "npcs": [],
+    "stability": 0.9,
+    "visited": False,
+}
+
+world_map[2][2] = {
+    "name": "Titania's Bower",
+    "description": "A serene glade, filled with vibrant flowers and gentle streams. The air shimmers with fae magic.",
+    "connections": {},
+    "encounters": [],
+    "npcs": [],
+    "stability": 0.9,
+    "visited": False,
+}
+
+world_map[2][3] = {
+    "name": "Oberon's Grotto",
+    "description": "A hidden cave, adorned with glowing crystals and whispering waterfalls. The air is thick with mystery.",
+    "connections": {},
+    "encounters": [],
+    "npcs": [],
+    "stability": 0.8,
+    "visited": False,
+}
+
+world_map[8][10] = {
+    "name": "The Dead Forest",
+    "description": "A desolate forest, where gnarled trees reach out like skeletal fingers. The air is heavy with a sense of dread.",
+    "connections": {},
+    "encounters": ["shadow creature", "wraith"],
+    "npcs": [],
+    "stability": 0.4,
+    "visited": False,
+}
+
+world_map[10][10] = {
+    "name": "Crystal Caves",
+    "description": "A labyrinth of shimmering crystal formations, echoing with the sounds of dripping water and unseen whispers.",
+    "connections": {},
+    "encounters": ["crystal golem", "fae spirit"],
+    "npcs": [],
+    "stability": 0.6,
+    "visited": False,
+}
+
+world_map[15][5] = {
+    "name": "Desert of the Sphinx",
+    "description": "A vast desert, where the sands shift and whisper secrets. The air shimmers with heat and illusion.",
+    "connections": {},
+    "encounters": ["sphinx", "sand elemental"],
+    "npcs": [],
+    "stability": 0.2,
+    "visited": False,
+}
 
 current_location = (5, 5)
 
@@ -634,4 +733,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
