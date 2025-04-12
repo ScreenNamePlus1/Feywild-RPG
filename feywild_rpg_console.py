@@ -350,12 +350,42 @@ def explore_city(player, city):
     except (ValueError, IndexError):
         print("Invalid choice.")
 
-# Main Game Loop
-def main():
-    player_name = input("Enter your name: ")
-    player = Character(player_name, "Wilden", "Wilder", 16, 14, 15, 12, 13, 10, 50)
+# Character Creation Function
+def create_player_character():
+    name = input("Enter your name: ")
+
+    races = ["Wilden", "Human", "Elf", "Dwarf"]
+    print("Choose your race:")
+    for i, race in enumerate(races):
+        print(f"{i + 1}. {race}")
+    race_choice = int(input("> ")) - 1
+    race = races[race_choice]
+
+    classes = ["Wilder", "Warrior", "Mage", "Rogue"]
+    print("Choose your class:")
+    for i, class_type in enumerate(classes):
+        print(f"{i + 1}. {class_type}")
+    class_choice = int(input("> ")) - 1
+    class_type = classes[class_choice]
+
+    # Generate stats (you can customize this)
+    strength = random.randint(8, 18)
+    dexterity = random.randint(8, 18)
+    constitution = random.randint(8, 18)
+    intelligence = random.randint(8, 18)
+    wisdom = random.randint(8, 18)
+    charisma = random.randint(8, 18)
+    hp = constitution * 5  # Example HP calculation
+
+    player = Character(name, race, class_type, strength, dexterity, constitution, intelligence, wisdom, charisma, hp)
     player.abilities.append(Ability("Heal", "Restores HP.", 5, heal))
     player.abilities.append(Ability("Magic Missile", "Deals magic damage.", 8, magic_missile))
+
+    return player
+
+# Main Game Loop
+def main():
+    player = create_player_character()  # Use character creation function
 
     print("Welcome to the Feywild!")
     player.show_stats()
