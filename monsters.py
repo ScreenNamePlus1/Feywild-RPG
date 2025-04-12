@@ -1,31 +1,20 @@
-# monsters.py
-
 import random
-from transformers import pipeline
 
-generator = pipeline("text-generation", model="distilgpt2")
+monster_names = ["Goblin", "Troll", "Fairy", "Orc", "Skeleton"]
 
-def generate_text_local(prompt, max_length=100):
-    try:
-        output = generator(prompt, max_length=max_length)
-        return output[0]["generated_text"].strip()
-    except Exception as e:
-        print(f"Generation error: {e}")
-        return "..."
+def create_goblin():
+    return {"name": "Goblin", "stats": {"health": 30, "strength": 8, "defense": 5}}
 
-def generate_monster_description(name, habitat, abilities):
-    prompt = f"Generate a description for a monster called {name} that lives in {habitat} and has the following abilities: {abilities}. Keep it to 2-3 sentences."
-    return generate_text_local(prompt)
+def create_troll():
+    return {"name": "Troll", "stats": {"health": 60, "strength": 15, "defense": 10}}
 
-monster_names = ["Gloomwing", "Thornbeast", "Mistwraith", "Shadowstalker", "Sparkfang"]
-monster_habitats = ["a dark forest", "a thorny thicket", "a misty swamp", "shadowy caves", "volcanic caverns"]
-monster_abilities = ["shadow manipulation", "poisonous thorns", "illusionary mists", "fiery breath", "teleportation"]
+def create_fairy():
+    return {"name": "Fairy", "stats": {"health": 20, "strength": 5, "defense": 3}}
 
-def generate_monster():
+def create_random_monster():
+    """Creates a random monster."""
     name = random.choice(monster_names)
-    habitat = random.choice(monster_habitats)
-    abilities = ", ".join(random.sample(monster_abilities, 2))
-    return f"{name}: {generate_monster_description(name, habitat, abilities)}"
-
-def encounter_monster():
-    print(generate_monster())
+    health = random.randint(20, 80)
+    strength = random.randint(5, 15)
+    defense = random.randint(3, 10)
+    return {"name": name, "stats": {"health": health, "strength": strength, "defense": defense}}
