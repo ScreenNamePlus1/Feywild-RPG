@@ -735,8 +735,7 @@ def main():
         else:
             print("Invalid choice.")
 
-if __name__ == "__main__":
-    def main():
+def main():
     player, current_location_load, world_map_load, city_load = load_game()
     if player is None:
         player = create_player_character()
@@ -814,3 +813,5 @@ if __name__ == "__main__":
         else:
             print("Invalid choice.")
 
+if __name__ == "__main__":
+    main()
