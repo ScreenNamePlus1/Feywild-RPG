@@ -1,13 +1,4 @@
 import random
-try:
-    from transformers import pipeline
-    try:
-        generator = pipeline("text-generation", model="distilgpt2")
-        transformers_available = True
-    except RuntimeError:
-        transformers_available = False
-except ImportError:
-    transformers_available = False
 import character_gen
 import locations
 import save_load
@@ -15,11 +6,7 @@ import save_load
 def generate_encounter(location, character):
     creatures = ["pixie", "dryad", "treant"]
     creature = random.choice(creatures)
-    if transformers_available:
-        prompt = f"A {creature} encounter in the {location['name']}."
-        description = generator(prompt, max_length=50, num_return_sequences=1)[0]["generated_text"]
-    else:
-        description = f"A {creature} encounter in the {location['name']}."
+    description = f"A {creature} encounter in the {location['name']}."
     print(f"\nEncounter: {description}")
     character_gen.gain_xp(character, random.randint(100, 500))
     print("You gained xp.")
@@ -39,8 +26,8 @@ def move_to_location(character, current_location, destination_name):
         print("You can't go that way.")
         return current_location
 
-def main_quest(character):
-    current_location = locations.locations["whispering_glade"]
+def main_quest(character, start_location):
+    current_location = start_location
     explore_location(character, current_location)
 
     while True:
@@ -53,9 +40,9 @@ def main_quest(character):
             current_location = move_to_location(character, current_location, direction)
             explore_location(character, current_location)
         elif action == "save":
-            save_load.save_game(character, current_location)
+            save_load.save_game(character, current_location, "savegame.json")
         elif action == "load":
-            loaded_character, loaded_location = save_load.load_game()
+            loaded_character, loaded_location = save_load.load_game("savegame.json")
             if loaded_character and loaded_location:
                 character = loaded_character
                 current_location = loaded_location
@@ -66,7 +53,3 @@ def main_quest(character):
             break
         else:
             print("Invalid action.")
-
-if __name__ == "__main__":
-    player_character = character_gen.create_character()
-    main_quest(player_character)
