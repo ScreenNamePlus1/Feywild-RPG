@@ -287,44 +287,92 @@ def combat(player, enemy):
 # NPC Interaction
 npc_dialogue = {
     "Faelar Whisperwind": {
-        "dialogue": ["Greetings, traveler. The forest is restless.", "Have you seen any strange creatures lately?", "Be careful on the path."],
-        "quest": {"description": "Slay 3 goblins in the thicket.", "reward": "100 xp"}
+        "dialogue": [
+            "Greetings, traveler. The forest is restless.",
+            "Have you seen any strange creatures lately?",
+            "Be careful on the path.",
+            "The old trees whisper of danger...",
+            "Welcome to the Grove, may your travels be safe.",
+        ],
+        "quest": {
+            "description": "Slay 3 goblins in the thicket.",
+            "reward": "100 xp",
+            "stages": ["Find the thicket", "Defeat 3 goblins", "Return to Faelar"],
+            "hints": ["Goblins are weak to fire", "The thicket is north of here."],
+        },
+        "personality": "wise and cautious",
+        "relationship": {"other_npcs": ["Sylvane Shadowbrook"], "disposition": "friendly"}
     },
     "Sylvane Shadowbrook": {
-        "dialogue": ["The whispers of the trees grow louder.", "The ancient grove is in danger.", "We must protect the feywild."],
-        "quest": None
+        "dialogue": [
+            "The whispers of the trees grow louder.",
+            "The ancient grove is in danger.",
+            "We must protect the feywild.",
+            "The darkness is spreading.",
+            "The balance of the forest is in danger."
+        ],
+        "quest": None,
+        "personality": "serious and concerned",
+        "relationship": {"other_npcs": ["Faelar Whisperwind"], "disposition": "close"}
     },
     "Bram Stoneheart": {
-        "dialogue": ["I've seen dark things in the shadows.", "The old ruins are not safe.", "Stay away from the dark grove."],
-        "quest": {"description": "Retrieve the ancient stone from the Ruins.", "reward": "A magic potion"}
+        "dialogue": [
+            "I've seen dark things in the shadows.",
+            "The old ruins are not safe.",
+            "Stay away from the dark grove.",
+            "I've been watching the ruins for many years.",
+            "I have seen things that would make your blood run cold."
+        ],
+        "quest": {
+            "description": "Retrieve the ancient stone from the Ruins.",
+            "reward": "A magic potion",
+            "stages": ["Enter the ruins","Find the stone","Return the stone to bram"],
+            "hints": ["The stone is hidden well","Be wary of traps"],
+        },
+        "personality": "gruff and wary",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     },
     "Lyra Silverleaf": {
         "dialogue": ["The flowers are dying, and the trees are weeping.", "The dark energy is spreading.", "We need help."],
-        "quest": None
+        "quest": None,
+        "personality": "sad and concerned",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     },
     "Kaelen Nightshade": {
         "dialogue": ["I used to be a guardian, but now I'm lost.", "The corruption has taken everything.", "Leave while you can."],
-        "quest": None
+        "quest": None,
+        "personality": "melancholy",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     },
     "Nimue Sunstrider": {
         "dialogue": ["Hope is not lost, traveler. We can still fight.", "The ancient magic still lives.", "Join us."],
-        "quest": None
+        "quest": None,
+        "personality": "hopeful",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     },
     "Torvin Ironbark": {
         "dialogue": ["The earth trembles, and the shadows grow long.", "We must stand together.", "Are you with us?"],
-        "quest": None
+        "quest": None,
+        "personality": "strong and determined",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     },
     "Anya Moonwhisper": {
         "dialogue": ["The stars weep for the feywild.", "The darkness threatens to consume us all.", "Find the light."],
-        "quest": None
+        "quest": None,
+        "personality": "mystical",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     },
     "Rylan Thornwood": {
         "dialogue": ["I know the secrets of these woods.", "The Drow are not the only threat.", "There is something worse."],
-        "quest": None
+        "quest": None,
+        "personality": "secretive",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     },
     "Elara Emberglow": {
         "dialogue": ["The fire of the feywild still burns.", "We will not surrender.", "Fight with us."],
-        "quest": None
+        "quest": None,
+        "personality": "fiery",
+        "relationship": {"other_npcs": [], "disposition": "neutral"}
     }
 }
 
