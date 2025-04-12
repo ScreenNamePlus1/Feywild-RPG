@@ -1,8 +1,11 @@
 import random
 try:
     from transformers import pipeline
-    generator = pipeline("text-generation", model="distilgpt2")
-    transformers_available = True
+    try:
+        generator = pipeline("text-generation", model="distilgpt2")
+        transformers_available = True
+    except RuntimeError:
+        transformers_available = False
 except ImportError:
     transformers_available = False
 import character_gen
@@ -16,7 +19,7 @@ def generate_encounter(location, character):
         prompt = f"A {creature} encounter in the {location['name']}."
         description = generator(prompt, max_length=50, num_return_sequences=1)[0]["generated_text"]
     else:
-        description = f"A {creature} encounter in the {location['name']}."  # Use simple string as fallback
+        description = f"A {creature} encounter in the {location['name']}."
     print(f"\nEncounter: {description}")
     character_gen.gain_xp(character, random.randint(100, 500))
     print("You gained xp.")
