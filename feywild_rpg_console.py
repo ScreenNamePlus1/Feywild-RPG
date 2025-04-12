@@ -1,8 +1,28 @@
-# feywild_rpg_console.py
+import character_gen  # Changed import name
+import main_quest
+import game_logic
+import locations
+import npcs
+import monsters
+import save_load
 
-from game_logic import handle_input, game_state  # Import the game loop and state
+def main():
+    print("Welcome to the Feywild RPG Console!")
 
-# Main game loop for the console version
-while True:
-    user_input = input(">> ")
-    handle_input(user_input, game_state)
+    while True:
+        action = input("\nWould you like to load a game? (yes/no): ").lower()
+        if action == "yes":
+            loaded_character, loaded_location = save_load.load_game()
+            if loaded_character and loaded_location:
+                player_character = loaded_character
+                main_quest.main_quest(player_character)
+                break
+        elif action == "no":
+            player_character = character_gen.create_character()  # Changed module name
+            main_quest.main_quest(player_character)
+            break
+        else:
+            print("Invalid input.")
+
+if __name__ == "__main__":
+    main()
