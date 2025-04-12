@@ -65,6 +65,7 @@ class Character:
             print("Active Quests:")
             for i, quest in enumerate(self.quests):
                 print(f"{i + 1}. {quest['description']} (Reward: {quest['reward']})")
+                print(f"   Current Stage: {quest['stages'][quest.get('current_stage', 0)]}")
         else:
             print("No active quests.")
 
@@ -295,25 +296,18 @@ npc_dialogue = {
             "Welcome to the Grove, may your travels be safe.",
         ],
         "quest": {
-            "description": "Slay 3 goblins in the thicket.",
-            "reward": "100 xp",
-            "stages": ["Find the thicket", "Defeat 3 goblins", "Return to Faelar"],
-            "hints": ["Goblins are weak to fire", "The thicket is north of here."],
+            "description": "The Corrupted Grove",
+            "reward": "150 xp, Magical Amulet",
+            "stages": [
+                "Talk to Faelar in the Grove.",
+                "Explore the Dark Grove.",
+                "Defeat the corrupted creature.",
+                "Return to Faelar.",
+            ],
+            "hints": ["The corruption is strongest in the west.", "The corrupted creature is vulnerable to fire."],
         },
         "personality": "wise and cautious",
-        "relationship": {"other_npcs": ["Sylvane Shadowbrook"], "disposition": "friendly"}
-    },
-    "Sylvane Shadowbrook": {
-        "dialogue": [
-            "The whispers of the trees grow louder.",
-            "The ancient grove is in danger.",
-            "We must protect the feywild.",
-            "The darkness is spreading.",
-            "The balance of the forest is in danger."
-        ],
-        "quest": None,
-        "personality": "serious and concerned",
-        "relationship": {"other_npcs": ["Faelar Whisperwind"], "disposition": "close"}
+        "relationship": {"other_npcs": ["Sylvane Shadowbrook"], "disposition": "friendly"},
     },
     "Bram Stoneheart": {
         "dialogue": [
@@ -321,16 +315,21 @@ npc_dialogue = {
             "The old ruins are not safe.",
             "Stay away from the dark grove.",
             "I've been watching the ruins for many years.",
-            "I have seen things that would make your blood run cold."
+            "I have seen things that would make your blood run cold.",
         ],
         "quest": {
-            "description": "Retrieve the ancient stone from the Ruins.",
-            "reward": "A magic potion",
-            "stages": ["Enter the ruins","Find the stone","Return the stone to bram"],
-            "hints": ["The stone is hidden well","Be wary of traps"],
+            "description": "The Lost Artifact",
+            "reward": "A magic potion, 100 xp",
+            "stages": [
+                "Talk to Bram near the path.",
+                "Navigate the traps in the Ruins.",
+                "Solve a puzzle to find the stone.",
+                "Return the stone to Bram.",
+            ],
+            "hints": ["Look for pressure plates.", "The stone is hidden behind a riddle."],
         },
         "personality": "gruff and wary",
-        "relationship": {"other_npcs": [], "disposition": "neutral"}
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
     },
     "Lyra Silverleaf": {
         "dialogue": ["The flowers are dying, and the trees are weeping.", "The dark energy is spreading.", "We need help."],
@@ -387,6 +386,7 @@ def interact_npc(player, npc_name):
             choice = input("Accept quest? (yes/no): ")
             if choice.lower() == "yes":
                 player.quests.append(npc_dialogue[npc_name]["quest"])
+                player.quests[-1]["current_stage"] = 0 # Initialize quest stage
                 print("Quest accepted!")
         else:
             print(f"{npc_name}: 'I have no quests for you right now.'")
@@ -402,18 +402,18 @@ def interact_npc(player, npc_name):
         print(f"{npc_name}: 'I have nothing to say to you.'")
 
 # Random Quest Generation
-def generate_quest():
-    quest_types = ["Retrieve", "Slay", "Explore"]
-    quest_type = random.choice(quest_types)
-    if quest_type == "Retrieve":
-        item = random.choice(["Enchanted Flower", "Ancient Stone", "Lost Scroll"])
-        return f"Retrieve the {item}."
-    elif quest_type == "Slay":
-        monster = random.choice(["goblin", "orc"])
-        return f"Slay the {monster}."
-    elif quest_type == "Explore":
-        location = random.choice(["Whispering Caves", "Forgotten Ruins", "Haunted Meadow"])
-        return f"Explore the {location}."
+def generate_goblin_quest():
+    return{
+        "description": "Goblin Threat",
+        "reward": "50 gold, 100 xp",
+        "stages": [
+            "Talk to the villager.",
+            "Enter the thicket.",
+            "Slay 5 goblins.",
+            "Return to the villager.",
+        ],
+        "hints": ["Goblins are weak to fire.", "They are in the thicket."],
+    }
 
 # City Generation
 city_names = ["Silverwood", "Gloomhaven", "Emberfall", "Whisperwind City", "Stonecrest"]
