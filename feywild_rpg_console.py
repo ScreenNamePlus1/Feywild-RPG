@@ -275,10 +275,34 @@ def calculate_distance(coord1, coord2):
 # City Generation
 city_names = ["Silverwood", "Gloomhaven", "Emberfall", "Whisperwind City", "Stonecrest"]
 city_districts = ["Market Square", "Tavern District", "Temple District", "Guildhall", "Residential Area", "Docks"]
-item_names = ["Sword", "Shield", "Potion", "Staff", "Amulet"]
-item_descriptions = ["A sharp sword.", "A sturdy shield.", "A healing potion.", "A magical staff.", "A mystical amulet."]
 
-# ... (your existing code above the explore() function) ...
+def generate_city():
+    city = {
+        "name": random.choice(city_names),
+        "description": f"A bustling city of {random.randint(500, 5000)} inhabitants.",
+        "districts": random.sample(city_districts, random.randint(3, 5)),
+        "npcs": [generate_npc_name() for _ in range(random.randint(3, 6))],
+        "shops": [],
+        "quests": []
+    }
+    return city
+
+def explore_city(player, city):
+    print(f"You enter {city['name']}.")
+    print(city["description"])
+    print("Districts:")
+    for i, district in enumerate(city["districts"]):
+        print(f"{i + 1}. {district}")
+    print("0. Leave City")
+    choice = input("> ")
+    try:
+        district_choice = int(choice) - 1
+        if district_choice == -1:
+            return
+        print(f"You enter the {city['districts'][district_choice]}.")
+        # Add district interaction logic here
+    except (ValueError, IndexError):
+        print("Invalid choice.")
 
 def explore(player):
     global current_location
@@ -319,50 +343,6 @@ def explore(player):
     print(f"Current Coordinates: {current_location}")
     shift_locations()
 
-# ... (rest of the code, including main()) ...
-
-def main():
-    player, current_location_load, world_map_load, city_load = load_game()
-    if player is None:
-        player = create_player_character()
-        current_location = (5,5)
-        world_map = [[None for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
-
-        world_map[5][5] = {
-            "name": "Grove",
-            "description": "A peaceful grove, ancient trees surround you. The air is thick with magic. Suddenly, a dark energy tears through the trees!",
-            "connections": {"north": (5, 6), "east": (6, 5), "west": (4, 5), "south": (5,4)},
-            "encounters": ["goblin", "orc"],
-            "npcs": ["Faelar", "Sylvane"],
-            "stability": 0.8,
-            "visited": False,
-        }
-        # ... (Other World Map Locations) ...
-        city = generate_city()
-    else:
-        current_location = current_location_load
-        world_map = world_map_load
-        city = city_load
-
-    print("Welcome to the Feywild!")
-    player.show_stats()
-    player.inventory.append(Item("Rusty Sword", "A rusty, old sword."))
-
-    while True:
-        print("\nWhat would you like to do?")
-        print("1. Explore")
-        print("2. Interact with NPC")
-        print("3. Check Stats")
-        print("4. Fight Enemy")
-        print("5. Check Quests")
-        print("6. Enter City")
-        print("7. Save Game")
-        print("8. Exit")
-        choice = input("> ")
-
-        if choice == "1":
-            explore(player)
-
 # Combat System
 def combat(player, enemy):
     print(f"A {enemy.name} attacks!")
@@ -385,7 +365,6 @@ def combat(player, enemy):
         # Example of a status effect being added.
         if random.randint(1,10) == 1:
             enemy_status_effects.append(StatusEffect("poison", 3, lambda target: target.hp - random.randint(1,4)))
-
 
 # NPC Interaction
 npc_dialogue = {
@@ -440,7 +419,7 @@ npc_dialogue = {
         "quest": None,
         "personality": "sad and concerned",
         "relationship": {"other_npcs": [], "disposition": "neutral"},
-        "farewells": ["Please be careful.", "I hope you find peace.", "The feywild is in danger.", "May the light protect you."]
+        "farewells": ["Please be careful.", "I hope you find peace.", "The feywild is in danger.", "May your spirit remain strong."]
     },
     "Kaelen Nightshade": {
         "dialogue": ["I used to be a guardian, but now I'm lost.", "The corruption has taken everything.", "Leave while you can."],
