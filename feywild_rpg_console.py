@@ -573,6 +573,14 @@ def create_player_character():
 
 def save_game(player, current_location, world_map, city):
     """Saves the game state to a JSON file."""
+
+    # Create a temporary player object without the 'effect' functions
+    temp_abilities = []
+    for ability in player.abilities:
+        temp_ability = ability.__dict__.copy() #Create a copy of the dictionary
+        del temp_ability["effect"] #Remove the function
+        temp_abilities.append(temp_ability)
+
     game_data = {
         "player": {
             "name": player.name,
@@ -590,7 +598,7 @@ def save_game(player, current_location, world_map, city):
             "xp": player.xp,
             "inventory": [item.__dict__ for item in player.inventory],
             "mana": player.mana,
-            "abilities": [ability.__dict__ for ability in player.abilities],
+            "abilities": temp_abilities, # Use the temp abilities list
             "quests": player.quests,
         },
         "current_location": current_location,
@@ -628,7 +636,18 @@ def load_game():
         )
 
         player.inventory = [Item(**item_data) for item_data in game_data["player"]["inventory"]]
-        player.abilities = [Ability(**ability_data) for ability_data in game_data["player"]["abilities"]]
+
+        # Reconstruct abilities with functions
+        player.abilities = []
+        for ability_data in game_data["player"]["abilities"]:
+            ability = Ability(
+                ability_data["name"],
+                ability_data["description"],
+                ability_data["cost"],
+                heal if ability_data["name"] == "Heal" else magic_missile #Assign the function
+            )
+            player.abilities.append(ability)
+
         player.quests = game_data["player"]["quests"]
 
         current_location = tuple(game_data["current_location"])
