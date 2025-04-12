@@ -1,9 +1,9 @@
 import random
 from transformers import pipeline
 import character_generation
-import locations #the locations.py from the previous response.
+import locations  # the locations.py from the previous response.
 
-generator = pipeline('text-generation', model='distilgpt2')
+generator = pipeline("text-generation", model="distilgpt2")
 
 def generate_encounter(location):
     """Generates a random encounter based on the location."""
@@ -16,7 +16,7 @@ def generate_encounter(location):
 
     creature = random.choice(creatures)
     prompt = f"A {creature} encounter in the {location['name']}."
-    description = generator(prompt, max_length=50, num_return_sequences=1)[0]['generated_text']
+    description = generator(prompt, max_length=50, num_return_sequences=1)[0]["generated_text"]
     print(f"\nEncounter: {description}")
 
 def explore_location(character, location):
@@ -30,7 +30,9 @@ def explore_location(character, location):
 def move_to_location(character, current_location, destination_name):
     """Moves the character to a new location."""
     if destination_name in current_location["exits"]:
-        destination = locations.locations[current_location["exits"][destination_name].lower().replace(" ", "_")]
+        destination = locations.locations[
+            current_location["exits"][destination_name].lower().replace(" ", "_")
+        ]
         return destination
     else:
         print("You can't go that way.")
@@ -39,7 +41,7 @@ def move_to_location(character, current_location, destination_name):
 def main_quest(character):
     """Main quest arc."""
     print("\nYou awaken in a strange wilderness...")
-    current_location = locations.locations["whispering_glade"] #Starting location.
+    current_location = locations.locations["whispering_glade"]  # Starting location.
     explore_location(character, current_location)
 
     while True:
