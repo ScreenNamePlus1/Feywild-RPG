@@ -20,6 +20,7 @@ class Character:
         self.inventory = []
         self.mana = mana
         self.abilities = []
+        self.quests = [] # Added quest log
 
     def attack(self, target):
         attack_roll = random.randint(1, 20) + self.strength
@@ -58,6 +59,14 @@ class Character:
             print(f"{self.name} uses {ability.name}!")
         else:
             print(f"{self.name} doesn't have enough mana!")
+
+    def show_quests(self):
+        if self.quests:
+            print("Active Quests:")
+            for i, quest in enumerate(self.quests):
+                print(f"{i + 1}. {quest['description']} (Reward: {quest['reward']})")
+        else:
+            print("No active quests.")
 
 class Enemy(Character):
     def __init__(self, name, hit_dice, armor_class, attack_bonus, damage, experience):
@@ -277,28 +286,68 @@ def combat(player, enemy):
 
 # NPC Interaction
 npc_dialogue = {
-    "Faelar Whisperwind": ["Greetings, traveler. The forest is restless.", "Have you seen any strange creatures lately?", "Be careful on the path."],
-    "Sylvane Shadowbrook": ["The whispers of the trees grow louder.", "The ancient grove is in danger.", "We must protect the feywild."],
-    "Bram Stoneheart": ["I've seen dark things in the shadows.", "The old ruins are not safe.", "Stay away from the dark grove."],
-    "Lyra Silverleaf": ["The flowers are dying, and the trees are weeping.", "The dark energy is spreading.", "We need help."],
-    "Kaelen Nightshade": ["I used to be a guardian, but now I'm lost.", "The corruption has taken everything.", "Leave while you can."],
-    "Nimue Sunstrider": ["Hope is not lost, traveler. We can still fight.", "The ancient magic still lives.", "Join us."],
-    "Torvin Ironbark": ["The earth trembles, and the shadows grow long.", "We must stand together.", "Are you with us?"],
-    "Anya Moonwhisper": ["The stars weep for the feywild.", "The darkness threatens to consume us all.", "Find the light."],
-    "Rylan Thornwood": ["I know the secrets of these woods.", "The Drow are not the only threat.", "There is something worse."],
-    "Elara Emberglow": ["The fire of the feywild still burns.", "We will not surrender.", "Fight with us."]
+    "Faelar Whisperwind": {
+        "dialogue": ["Greetings, traveler. The forest is restless.", "Have you seen any strange creatures lately?", "Be careful on the path."],
+        "quest": {"description": "Slay 3 goblins in the thicket.", "reward": "100 xp"}
+    },
+    "Sylvane Shadowbrook": {
+        "dialogue": ["The whispers of the trees grow louder.", "The ancient grove is in danger.", "We must protect the feywild."],
+        "quest": None
+    },
+    "Bram Stoneheart": {
+        "dialogue": ["I've seen dark things in the shadows.", "The old ruins are not safe.", "Stay away from the dark grove."],
+        "quest": {"description": "Retrieve the ancient stone from the Ruins.", "reward": "A magic potion"}
+    },
+    "Lyra Silverleaf": {
+        "dialogue": ["The flowers are dying, and the trees are weeping.", "The dark energy is spreading.", "We need help."],
+        "quest": None
+    },
+    "Kaelen Nightshade": {
+        "dialogue": ["I used to be a guardian, but now I'm lost.", "The corruption has taken everything.", "Leave while you can."],
+        "quest": None
+    },
+    "Nimue Sunstrider": {
+        "dialogue": ["Hope is not lost, traveler. We can still fight.", "The ancient magic still lives.", "Join us."],
+        "quest": None
+    },
+    "Torvin Ironbark": {
+        "dialogue": ["The earth trembles, and the shadows grow long.", "We must stand together.", "Are you with us?"],
+        "quest": None
+    },
+    "Anya Moonwhisper": {
+        "dialogue": ["The stars weep for the feywild.", "The darkness threatens to consume us all.", "Find the light."],
+        "quest": None
+    },
+    "Rylan Thornwood": {
+        "dialogue": ["I know the secrets of these woods.", "The Drow are not the only threat.", "There is something worse."],
+        "quest": None
+    },
+    "Elara Emberglow": {
+        "dialogue": ["The fire of the feywild still burns.", "We will not surrender.", "Fight with us."],
+        "quest": None
+    }
 }
 
 def interact_npc(player, npc_name):
     print(f"You meet {npc_name}.")
     if npc_name in npc_dialogue:
-        for line in npc_dialogue[npc_name]:
+        for line in npc_dialogue[npc_name]["dialogue"]:
             print(f"{npc_name}: '{line}'")
+
+        if npc_dialogue[npc_name]["quest"]:
+            print(f"{npc_name}: 'I have a task for you. {npc_dialogue[npc_name]['quest']['description']}.'")
+            choice = input("Accept quest? (yes/no): ")
+            if choice.lower() == "yes":
+                player.quests.append(npc_dialogue[npc_name]["quest"])
+                print("Quest accepted!")
+        else:
+            print(f"{npc_name}: 'I have no quests for you right now.'")
+
         print("1. Talk again.")
         print("2. Leave.")
         choice = input("> ")
         if choice == "1":
-            print(random.choice(npc_dialogue[npc_name]))
+            print(random.choice(npc_dialogue[npc_name]["dialogue"]))
         else:
             print("You move on.")
     else:
@@ -399,7 +448,7 @@ def main():
         print("2. Interact with NPC")
         print("3. Check Stats")
         print("4. Fight Enemy")
-        print("5. Get Quest")
+        print("5. Check Quests")
         print("6. Exit")
         print("7. Enter City")
         choice = input("> ")
@@ -422,7 +471,7 @@ def main():
             enemy = create_enemy(random.choice(["goblin", "orc"]))
             combat(player, enemy)
         elif choice == "5":
-            print(generate_quest())
+            player.show_quests()
         elif choice == "6":
             break
         elif choice == "7":
