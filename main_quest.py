@@ -1,16 +1,12 @@
 import random
-from transformers import pipeline
 import character_gen
 import locations
 import save_load
 
-generator = pipeline("text-generation", model="distilgpt2")
-
 def generate_encounter(location, character):
     creatures = ["pixie", "dryad", "treant"]
     creature = random.choice(creatures)
-    prompt = f"A {creature} encounter in the {location['name']}."
-    description = generator(prompt, max_length=50, num_return_sequences=1)[0]["generated_text"]
+    description = f"A {creature} encounter in the {location['name']}."  # Replaced transformers with simple string
     print(f"\nEncounter: {description}")
     character_gen.gain_xp(character, random.randint(100, 500))
     print("You gained xp.")
