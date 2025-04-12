@@ -4,7 +4,7 @@ import math
 
 # Character and Enemy Stats
 class Character:
-    def __init__(self, name, race, class_type, strength, dexterity, constitution, intelligence, wisdom, charisma, hp, level=1, xp=0, mana=20, gold=100):
+    def __init__(self, name, race, class_type, strength, dexterity, constitution, intelligence, wisdom, charisma, hp, level=1, xp=0, mana=20):
         self.name = name
         self.race = race
         self.class_type = class_type
@@ -22,7 +22,6 @@ class Character:
         self.mana = mana
         self.abilities = []
         self.quests = []
-        self.gold = gold
 
     def attack(self, target):
         attack_roll = random.randint(1, 20) + self.strength
@@ -40,7 +39,7 @@ class Character:
 
     def show_stats(self):
         print(f"Name: {self.name}, Race: {self.race}, Class: {self.class_type}")
-        print(f"HP: {self.hp}/{self.max_hp}, Level: {self.level}, XP: {self.xp}, Gold: {self.gold}")
+        print(f"HP: {self.hp}/{self.max_hp}, Level: {self.level}, XP: {self.xp}")
         print(f"STR: {self.strength}, DEX: {self.dexterity}, CON: {self.constitution}, INT: {self.intelligence}, WIS: {self.wisdom}, CHA: {self.charisma}")
         print(f"Inventory: {self.inventory}")
         print(f"Mana: {self.mana}")
@@ -75,7 +74,7 @@ class Enemy(Character):
     def __init__(self, name, hit_dice, armor_class, attack_bonus, damage, experience):
         num_dice, die_size = map(int, hit_dice.split('d'))
         hp = random.randint(num_dice, num_dice * die_size)
-        super().__init__(name, "Enemy", "Monster", 10, 10, 10, 10, 10, 10, hp, gold = 0)
+        super().__init__(name, "Enemy", "Monster", 10, 10, 10, 10, 10, 10, hp)
         self.armor_class = armor_class
         self.attack_bonus = attack_bonus
         self.damage = damage
@@ -123,13 +122,6 @@ def magic_missile(user, target):
     target.hp -= damage
     print(f"{target.name} takes {damage} damage from magic missile.")
 
-# Status Effects
-class StatusEffect:
-    def __init__(self, name, duration, effect):
-        self.name = name
-        self.duration = duration
-        self.effect = effect
-
 # Game World and Navigation
 MAP_WIDTH = 20
 MAP_HEIGHT = 20
@@ -145,7 +137,106 @@ world_map[5][5] = {
     "stability": 0.8,
     "visited": False,
 }
-# ... (Other World Map Locations) ...
+
+world_map[5][6] = {
+    "name": "Thicket",
+    "description": "A dense thicket, thorns and vines block your path. The light is dim.",
+    "connections": {"south": (5, 5), "east": (6, 6)},
+    "encounters": ["goblin"],
+    "npcs": [],
+    "stability": 0.5,
+    "visited": False,
+}
+
+world_map[6][5] = {
+    "name": "Path",
+    "description": "A winding path, leading through the forest. The sounds of nature fill the air.",
+    "connections": {"west": (5, 5), "east": (7, 5)},
+    "encounters": ["orc"],
+    "npcs": ["Bram"],
+    "stability": 0.7,
+    "visited": False,
+}
+
+world_map[4][5] = {
+    "name": "Dark Grove",
+    "description": "A dark grove, the trees here are twisted and corrupted. A sense of dread fills you.",
+    "connections": {"east": (5, 5)},
+    "encounters": ["goblin", "orc"],
+    "npcs": [],
+    "stability": 0.3,
+    "visited": False,
+}
+
+world_map[6][6] = {
+    "name": "Ruins",
+    "description": "Ancient ruins, overgrown with vines. The stones whisper of forgotten magic.",
+    "connections": {"west": (5, 6), "south": (7,5)},
+    "encounters": ["orc"],
+    "npcs": [],
+    "stability": 0.6,
+    "visited": False,
+}
+
+world_map[7][5] = {
+    "name": "Meadow",
+    "description": "A wide open meadow, with tall waving grasses, and flowers that glow with a faint light.",
+    "connections": {"north": (6,6), "west": (6, 5)},
+    "encounters": ["goblin"],
+    "npcs": [],
+    "stability": 0.9,
+    "visited": False,
+}
+
+world_map[2][2] = {
+    "name": "Titania's Bower",
+    "description": "A serene glade, filled with vibrant flowers and gentle streams. The air shimmers with fae magic.",
+    "connections": {},
+    "encounters": [],
+    "npcs": [],
+    "stability": 0.9,
+    "visited": False,
+}
+
+world_map[2][3] = {
+    "name": "Oberon's Grotto",
+    "description": "A hidden cave, adorned with glowing crystals and whispering waterfalls. The air is thick with mystery.",
+    "connections": {},
+    "encounters": [],
+    "npcs": [],
+    "stability": 0.8,
+    "visited": False,
+}
+
+world_map[8][10] = {
+    "name": "The Dead Forest",
+    "description": "A desolate forest, where gnarled trees reach out like skeletal fingers. The air is heavy with a sense of dread.",
+    "connections": {},
+    "encounters": ["shadow creature", "wraith"],
+    "npcs": [],
+    "stability": 0.4,
+    "visited": False,
+}
+
+world_map[10][10] = {
+    "name": "Crystal Caves",
+    "description": "A labyrinth of shimmering crystal formations, echoing with the sounds of dripping water and unseen whispers.",
+    "connections": {},
+    "encounters": ["crystal golem", "fae spirit"],
+    "npcs": [],
+    "stability": 0.6,
+    "visited": False,
+}
+
+world_map[15][5] = {
+    "name": "Desert of the Sphinx",
+    "description": "A vast desert, where the sands shift and whisper secrets. The air shimmers with heat and illusion.",
+    "connections": {},
+    "encounters": ["sphinx", "sand elemental"],
+    "npcs": [],
+    "stability": 0.2,
+    "visited": False,
+}
 
 current_location = (5, 5)
 
@@ -243,20 +334,7 @@ def create_enemy(enemy_name):
 # Combat System
 def combat(player, enemy):
     print(f"A {enemy.name} attacks!")
-    player_status_effects = []
-    enemy_status_effects = []
     while player.is_alive() and enemy.is_alive():
-        # Apply Status Effects
-        for effect in player_status_effects:
-            effect.effect(player)
-            effect.duration -= 1
-        player_status_effects = [effect for effect in player_status_effects if effect.duration > 0]
-
-        for effect in enemy_status_effects:
-            effect.effect(enemy)
-            effect.duration -= 1
-        enemy_status_effects = [effect for effect in enemy_status_effects if effect.duration > 0]
-
         print(f"\n{player.name}'s turn:")
         print("1. Attack")
         print("2. Flee")
@@ -270,7 +348,6 @@ def combat(player, enemy):
             else:
                 print(f"You defeated the {enemy.name}!")
                 player.xp += enemy.experience
-                player.gold += random.randint(1, enemy.experience)
                 if player.xp >= player.level * 100:
                     player.level_up()
                 return
@@ -301,14 +378,134 @@ def combat(player, enemy):
         else:
             print("Invalid choice.")
 
-        if random.randint(1,10) == 1:
-            enemy_status_effects.append(StatusEffect("poison", 3, lambda target: target.hp - random.randint(1,4)))
-
     if not player.is_alive():
         print("You have been defeated!")
 
-# NPC Interaction (same as before)
-# ...
+# NPC Interaction
+npc_dialogue = {
+    "Faelar Whisperwind": {
+        "dialogue": [
+            "Greetings, traveler. The forest is restless.",
+            "Have you seen any strange creatures lately?",
+            "Be careful on the path.",
+            "The old trees whisper of danger...",
+            "Welcome to the Grove, may your travels be safe.",
+        ],
+        "quest": {
+            "description": "The Corrupted Grove",
+            "reward": "150 xp, Magical Amulet",
+            "stages": [
+                "Talk to Faelar in the Grove.",
+                "Explore the Dark Grove.",
+                "Defeat the corrupted creature.",
+                "Return to Faelar.",
+            ],
+            "hints": ["The corruption is strongest in the west.", "The corrupted creature is vulnerable to fire."],
+        },
+        "personality": "wise and cautious",
+        "relationship": {"other_npcs": ["Sylvane Shadowbrook"], "disposition": "friendly"},
+        "farewells": ["May the stars guide your path.", "Farewell, traveler.", "Be safe on your journey.", "The forest watches you."]
+    },
+    "Bram Stoneheart": {
+        "dialogue": [
+            "I've seen dark things in the shadows.",
+            "The old ruins are not safe.",
+            "Stay away from the dark grove.",
+            "I've been watching the ruins for many years.",
+            "I have seen things that would make your blood run cold.",
+        ],
+        "quest": {
+            "description": "The Lost Artifact",
+            "reward": "A magic potion, 100 xp",
+            "stages": [
+                "Talk to Bram near the path.",
+                "Navigate the traps in the Ruins.",
+                "Solve a puzzle to find the stone.",
+                "Return the stone to Bram.",
+            ],
+            "hints": ["Look for pressure plates.", "The stone is hidden behind a riddle."],
+        },
+        "personality": "gruff and wary",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Hmph. Be off.", "Don't come back.", "Watch your step.", "Leave me be."]
+    },
+    "Lyra Silverleaf": {
+        "dialogue": ["The flowers are dying, and the trees are weeping.", "The dark energy is spreading.", "We need help."],
+        "quest": None,
+        "personality": "sad and concerned",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Please be careful.", "I hope you find peace.", "The feywild is in danger.", "May the light protect you."]
+    },
+    "Kaelen Nightshade": {
+        "dialogue": ["I used to be a guardian, but now I'm lost.", "The corruption has taken everything.", "Leave while you can."],
+        "quest": None,
+        "personality": "melancholy",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Go now, while you still can.", "The shadows will consume you.", "I cannot help you.", "Beware the darkness."]
+    },
+    "Nimue Sunstrider": {
+        "dialogue": ["Hope is not lost, traveler. We can still fight.", "The ancient magic still lives.", "Join us."],
+        "quest": None,
+        "personality": "hopeful",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Fight with us!", "We will not surrender.", "The light will guide us.", "May your spirit remain strong."]
+    },
+    "Torvin Ironbark": {
+        "dialogue": ["The earth trembles, and the shadows grow long.", "We must stand together.", "Are you with us?"],
+        "quest": None,
+        "personality": "strong and determined",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Stand strong, traveler.", "The earth will protect you.", "We will prevail.", "Go with my blessing."]
+    },
+    "Anya Moonwhisper": {
+        "dialogue": ["The stars weep for the feywild.", "The darkness threatens to consume us all.", "Find the light."],
+        "quest": None,
+        "personality": "mystical",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["The stars will guide you.", "Seek the hidden paths.", "The moon will watch over you.", "May your dreams be filled with light."]
+    },
+    "Rylan Thornwood": {
+        "dialogue": ["I know the secrets of these woods.", "The Drow are not the only threat.", "There is something worse."],
+        "quest": None,
+        "personality": "secretive",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["I have told you too much.", "Leave these woods.", "The secrets are not safe.", "Go now, and forget what you have learned."]
+    },
+    "Elara Emberglow": {
+        "dialogue": ["The fire of the feywild still burns.", "We will not surrender.", "Fight with us."],
+        "quest": None,
+        "personality": "fiery",
+        "relationship": {"other_npcs": [], "disposition": "neutral"},
+        "farewells": ["Burn with the fire of the feywild!", "We will not be extinguished.", "Fight for the light!", "May your heart burn brightly."]
+    }
+}
+
+def interact_npc(player, npc_name):
+    print(f"You meet {npc_name}.")
+    if npc_name in npc_dialogue:
+        for line in npc_dialogue[npc_name]["dialogue"]:
+            print(f"{npc_name}: '{line}'")
+
+        if npc_dialogue[npc_name]["quest"]:
+            print(f"{npc_name}: 'I have a task for you. {npc_dialogue[npc_name]['quest']['description']}.'")
+            choice = input("Accept quest? (yes/no): ")
+            if choice.lower() == "yes":
+                player.quests.append(npc_dialogue[npc_name]["quest"])
+                player.quests[-1]["current_stage"] = 0
+                print("Quest accepted!")
+        else:
+            print(f"{npc_name}: 'I have no quests for you right now.'")
+
+        print("1. Talk again.")
+        print("2. Leave.")
+        choice = input("> ")
+        if choice == "1":
+            print(random.choice(npc_dialogue[npc_name]["dialogue"]))
+        else:
+            print(f"{npc_name}: '{random.choice(npc_dialogue[npc_name]['farewells'])}'")
+            print("You move on.")
+    else:
+        print(f"{npc_name}: 'I have nothing to say to you.'")
 
 # Random Quest Generation
 def generate_goblin_quest():
@@ -327,8 +524,6 @@ def generate_goblin_quest():
 # City Generation
 city_names = ["Silverwood", "Gloomhaven", "Emberfall", "Whisperwind City", "Stonecrest"]
 city_districts = ["Market Square", "Tavern District", "Temple District", "Guildhall", "Residential Area", "Docks"]
-item_names = ["Sword", "Shield", "Potion", "Staff", "Amulet"]
-item_descriptions = ["A sharp sword.", "A sturdy shield.", "A healing potion.", "A magical staff.", "A mystical amulet."]
 
 def generate_city():
     city = {
@@ -336,8 +531,8 @@ def generate_city():
         "description": f"A bustling city of {random.randint(500, 5000)} inhabitants.",
         "districts": random.sample(city_districts, random.randint(3, 5)),
         "npcs": [generate_npc_name() for _ in range(random.randint(3, 6))],
-        "shops": [{"item":Item(random.choice(item_names), random.choice(item_descriptions)), "price": random.randint(10, 100)} for _ in range(random.randint(1, 3))],
-        "quests": [generate_goblin_quest()]
+        "shops": [],
+        "quests": []
     }
     return city
 
@@ -354,30 +549,7 @@ def explore_city(player, city):
         if district_choice == -1:
             return
         print(f"You enter the {city['districts'][district_choice]}.")
-        if city["districts"][district_choice] == "Market Square":
-            for i, shop in enumerate(city["shops"]):
-                print(f"{i+1}. {shop['item'].name} - {shop['price']} gold")
-            print("0. Exit Market")
-            shop_choice = int(input("> ")) -1
-            if shop_choice == -1:
-                return
-            if player.gold >= city["shops"][shop_choice]["price"]:
-                player.inventory.append(city["shops"][shop_choice]["item"])
-                player.gold -= city["shops"][shop_choice]["price"]
-                print(f"You bought {city['shops'][shop_choice]['item'].name}")
-            else:
-                print("Not enough gold.")
-
-        if city["districts"][district_choice] == "Tavern District":
-            print("Play a mini game!")
-            # Add minigame logic here.
-        if city["districts"][district_choice] == "Guildhall":
-            for i, quest in enumerate(city["quests"]):
-                print(f"{i+1}. {quest['description']}")
-            quest_choice = int(input("> ")) -1
-            player.quests.append(city["quests"][quest_choice])
-            print("Quest accepted")
-
+        # Add district interaction logic here
     except (ValueError, IndexError):
         print("Invalid choice.")
 
@@ -435,7 +607,6 @@ def save_game(player, current_location, world_map, city):
             "mana": player.mana,
             "abilities": [ability.__dict__ for ability in player.abilities],
             "quests": player.quests,
-            "gold": player.gold,
         },
         "current_location": current_location,
         "world_map": world_map,
@@ -469,7 +640,6 @@ def load_game():
             game_data["player"]["level"],
             game_data["player"]["xp"],
             game_data["player"]["mana"],
-            game_data["player"]["gold"]
         )
 
         player.inventory = [Item(**item_data) for item_data in game_data["player"]["inventory"]]
