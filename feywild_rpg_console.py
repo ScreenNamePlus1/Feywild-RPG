@@ -278,83 +278,90 @@ city_districts = ["Market Square", "Tavern District", "Temple District", "Guildh
 item_names = ["Sword", "Shield", "Potion", "Staff", "Amulet"]
 item_descriptions = ["A sharp sword.", "A sturdy shield.", "A healing potion.", "A magical staff.", "A mystical amulet."]
 
-def generate_city():
-    city = {
-        "name": random.choice(city_names),
-        "description": f"A bustling city of {random.randint(500, 5000)} inhabitants.",
-        "districts": random.sample(city_districts, random.randint(3, 5)),
-        "npcs": [generate_npc_name() for _ in range(random.randint(3, 6))],
-        "shops": [{"item":Item(random.choice(item_names), random.choice(item_descriptions)), "price": random.randint(10, 100)} for _ in range(random.randint(1, 3))],
-        "quests": [generate_goblin_quest()]
-    }
-    return city
+# ... (your existing code above the explore() function) ...
 
-def explore_city(player, city):
-    print(f"You enter {city['name']}.")
-    print(city["description"])
-    print("Districts:")
-    for i, district in enumerate(city["districts"]):
-        print(f"{i + 1}. {district}")
-    print("0. Leave City")
-    choice = input("> ")
-    try:
-        district_choice = int(choice) - 1
-        if district_choice == -1:
-            return
-        print(f"You enter the {city['districts'][district_choice]}.")
-        if city["districts"][district_choice] == "Market Square":
-            for i, shop in enumerate(city["shops"]):
-                print(f"{i+1}. {shop['item'].name} - {shop['price']} gold")
-            print("0. Exit Market")
-            shop_choice = int(input("> ")) -1
-            if shop_choice == -1:
-                return
-            if player.gold >= city["shops"][shop_choice]["price"]:
-                player.inventory.append(city['shops'][shop_choice]['item'])
-                player.gold -= city['shops'][shop_choice]['price']
-                print(f"You bought {city['shops'][shop_choice]['item'].name}")
-            else:
-                print("Not enough gold.")
+def explore(player):
+    global current_location
+    location = world_map[current_location[1]][current_location[0]]
+    print(location["description"])
 
-        if city["districts"][district_choice] == "Tavern District":
-            print("Play a mini game!")
-            # Add minigame logic here.
-        if city["districts"][district_choice] == "Guildhall":
-            for i, quest in enumerate(city["quests"]):
-                print(f"{i+1}. {quest['description']}")
-            quest_choice = int(input("> ")) -1
-            player.quests.append(city["quests"][quest_choice])
-            print("Quest accepted")
+    location["visited"] = True
 
-    except (ValueError, IndexError):
-        print("Invalid choice.")
-
-def load_monster_data():
-    try:
-        with open("monsters.json", "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print("Error: monsters.json not found.")
-        return {}
-    except json.JSONDecodeError:
-        print("Error: Invalid JSON format in monsters.json.")
-        return {}
-
-monster_data = load_monster_data()
-
-def create_enemy(enemy_name):
-    if enemy_name.lower() in monster_data:
-        monster = monster_data[enemy_name.lower()]
-        return Enemy(
-            monster["name"],
-            monster["hit_dice"],
-            monster["armor_class"],
-            monster["attack"],
-            monster["damage"],
-            monster["experience"]
-        )
+    directions = location["connections"]
+    if directions:
+        for i, direction in enumerate(directions):
+            next_coord = directions[direction]
+            next_location = world_map[next_coord[1]][next_coord[0]]
+            distance = calculate_distance(current_location, next_coord)
+            print(f"{i + 1}. Go {direction.capitalize()} (Distance: {distance:.2f}).")
+        choice = input("> ")
+        try:
+            direction_choice = list(directions.keys())[int(choice) - 1]
+            current_location = directions[direction_choice]
+        except (ValueError, IndexError):
+            print("Invalid choice.")
     else:
-        return Enemy("Unknown Enemy", "1d6", 10, 0, "1d4", 10)
+        print("There are no exits here.")
+
+    if location["encounters"]:
+        encounter_chance = random.randint(1, 4)
+        if encounter_chance == 1:
+            enemy_name = random.choice(location["encounters"])
+            enemy = create_enemy(enemy_name)
+            combat(player, enemy)
+
+    if location["npcs"]:
+        npc_chance = random.randint(1, 4)
+        if npc_chance == 1:
+            npc_name = generate_npc_name()
+            interact_npc(player, npc_name)
+
+    print(f"Current Coordinates: {current_location}")
+    shift_locations()
+
+# ... (rest of the code, including main()) ...
+
+def main():
+    player, current_location_load, world_map_load, city_load = load_game()
+    if player is None:
+        player = create_player_character()
+        current_location = (5,5)
+        world_map = [[None for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
+
+        world_map[5][5] = {
+            "name": "Grove",
+            "description": "A peaceful grove, ancient trees surround you. The air is thick with magic. Suddenly, a dark energy tears through the trees!",
+            "connections": {"north": (5, 6), "east": (6, 5), "west": (4, 5), "south": (5,4)},
+            "encounters": ["goblin", "orc"],
+            "npcs": ["Faelar", "Sylvane"],
+            "stability": 0.8,
+            "visited": False,
+        }
+        # ... (Other World Map Locations) ...
+        city = generate_city()
+    else:
+        current_location = current_location_load
+        world_map = world_map_load
+        city = city_load
+
+    print("Welcome to the Feywild!")
+    player.show_stats()
+    player.inventory.append(Item("Rusty Sword", "A rusty, old sword."))
+
+    while True:
+        print("\nWhat would you like to do?")
+        print("1. Explore")
+        print("2. Interact with NPC")
+        print("3. Check Stats")
+        print("4. Fight Enemy")
+        print("5. Check Quests")
+        print("6. Enter City")
+        print("7. Save Game")
+        print("8. Exit")
+        choice = input("> ")
+
+        if choice == "1":
+            explore(player)
 
 # Combat System
 def combat(player, enemy):
