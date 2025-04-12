@@ -47,6 +47,9 @@ class Character:
         for ability in self.abilities:
             print(f"- {ability.name}: {ability.description} ({ability.cost} Mana)")
 
+    def show_quests(self):
+        print("Quests displayed!")
+
 # Status Effects
 class StatusEffect:
     def __init__(self, name, duration, effect):
@@ -67,9 +70,6 @@ class StatusEffect:
             print(f"{self.name} uses {ability.name}!")
         else:
             print(f"{self.name} doesn't have enough mana!")
-
-    def show_quests(self):
-        print("Quests displayed!")
 
 class Enemy(Character):
     def __init__(self, name, hit_dice, armor_class, attack_bonus, damage, experience):
