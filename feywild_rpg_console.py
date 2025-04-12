@@ -69,13 +69,7 @@ class StatusEffect:
             print(f"{self.name} doesn't have enough mana!")
 
     def show_quests(self):
-        if self.quests:
-            print("Active Quests:")
-            for i, quest in enumerate(self.quests):
-                print(f"{i + 1}. {quest['description']} (Reward: {quest['reward']})")
-                print(f"   Current Stage: {quest['stages'][quest.get('current_stage', 0)]}")
-        else:
-            print("No active quests.")
+        print("Quests displayed!")
 
 class Enemy(Character):
     def __init__(self, name, hit_dice, armor_class, attack_bonus, damage, experience):
