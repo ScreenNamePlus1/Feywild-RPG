@@ -1,5 +1,6 @@
 import random
 import json
+import math
 
 # Character and Enemy Stats
 class Character:
@@ -129,42 +130,60 @@ world_map = {
         "east": "Path",
         "west": "Dark Grove",
         "encounters": ["goblin", "orc"],
-        "npcs": ["Faelar", "Sylvane"]
+        "npcs": ["Faelar", "Sylvane"],
+        "coordinates": (0, 0),
+        "stability": 0.8,
+        "visited": False,
     },
     "Thicket": {
         "description": "A dense thicket, thorns and vines block your path. The light is dim.",
         "south": "Grove",
         "east": "Ruins",
         "encounters": ["goblin"],
-        "npcs": []
+        "npcs": [],
+        "coordinates": (0, 1),
+        "stability": 0.5,
+        "visited": False,
     },
     "Path": {
         "description": "A winding path, leading through the forest. The sounds of nature fill the air.",
         "west": "Grove",
         "east": "Meadow",
         "encounters": ["orc"],
-        "npcs": ["Bram"]
+        "npcs": ["Bram"],
+        "coordinates": (1, 0),
+        "stability": 0.7,
+        "visited": False,
     },
     "Dark Grove": {
         "description": "A dark grove, the trees here are twisted and corrupted. A sense of dread fills you.",
         "east": "Grove",
         "encounters": ["goblin", "orc"],
-        "npcs": []
+        "npcs": [],
+        "coordinates": (-1, 0),
+        "stability": 0.3,
+        "visited": False,
     },
     "Ruins": {
         "description": "Ancient ruins, overgrown with vines. The stones whisper of forgotten magic.",
         "west": "Thicket",
         "south": "Meadow",
         "encounters": ["orc"],
-        "npcs": []
+        "npcs": [],
+        "coordinates": (1, 1),
+        "stability": 0.6,
+        "visited": False,
     },
     "Meadow": {
         "description": "A wide open meadow, with tall waving grasses, and flowers that glow with a faint light.",
         "north": "Ruins",
         "west": "Path",
         "encounters": ["goblin"],
-        "npcs": []
-    }
+        "npcs": [],
+        "coordinates": (2, 0),
+        "stability": 0.9,
+        "visited": False,
+    },
 }
 
 current_location = "Grove"
@@ -176,16 +195,34 @@ last_names = ["Whisperwind", "Shadowbrook", "Stoneheart", "Silverleaf", "Nightsh
 def generate_npc_name():
     return random.choice(first_names) + " " + random.choice(last_names)
 
+def shift_locations():
+    for location_name, location_data in world_map.items():
+        if random.random() > location_data["stability"]:
+            x, y = location_data["coordinates"]
+            dx = random.randint(-1, 1)
+            dy = random.randint(-1, 1)
+            location_data["coordinates"] = (x + dx, y + dy)
+            print(f"{location_name} shifts slightly.")
+
+def calculate_distance(coord1, coord2):
+    x1, y1 = coord1
+    x2, y2 = coord2
+    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
 def explore(player):
     global current_location
     location = world_map[current_location]
     print(location["description"])
 
+    location["visited"] = True
+
     directions = [d for d in ["north", "east", "west", "south"] if d in location]
 
     if directions:
         for i, direction in enumerate(directions):
-            print(f"{i + 1}. Go {direction.capitalize()}.")
+            next_location = world_map[location[direction]]
+            distance = calculate_distance(location["coordinates"], next_location["coordinates"])
+            print(f"{i + 1}. Go {direction.capitalize()} (Distance: {distance:.2f}).")
         choice = input("> ")
         try:
             direction_choice = directions[int(choice) - 1]
@@ -207,6 +244,9 @@ def explore(player):
         if npc_chance == 1:
             npc_name = generate_npc_name()
             interact_npc(player, npc_name)
+
+    print(f"Current Coordinates: {location['coordinates']}")
+    shift_locations()
 
 def load_monster_data():
     try:
@@ -386,7 +426,7 @@ def interact_npc(player, npc_name):
             choice = input("Accept quest? (yes/no): ")
             if choice.lower() == "yes":
                 player.quests.append(npc_dialogue[npc_name]["quest"])
-                player.quests[-1]["current_stage"] = 0 # Initialize quest stage
+                player.quests[-1]["current_stage"] = 0
                 print("Quest accepted!")
         else:
             print(f"{npc_name}: 'I have no quests for you right now.'")
@@ -482,7 +522,7 @@ def create_player_character():
 
 # Main Game Loop
 def main():
-    player = create_player_character()  # Use character creation function
+    player = create_player_character()
 
     print("Welcome to the Feywild!")
     player.show_stats()
