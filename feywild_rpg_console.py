@@ -736,4 +736,81 @@ def main():
             print("Invalid choice.")
 
 if __name__ == "__main__":
-    main()
+    def main():
+    player, current_location_load, world_map_load, city_load = load_game()
+    if player is None:
+        player = create_player_character()
+        current_location = (5, 5)
+        world_map = [[None for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
+
+        world_map[5][5] = {
+            "name": "Grove",
+            "description": "A peaceful grove, ancient trees surround you. The air is thick with magic. Suddenly, a dark energy tears through the trees!",
+            "connections": {"north": (5, 6), "east": (6, 5), "west": (4, 5), "south": (5, 4)},
+            "encounters": ["goblin", "orc"],
+            "npcs": ["Faelar", "Sylvane"],
+            "stability": 0.8,
+            "visited": False,
+        }
+        # ... (Other World Map Locations) ...
+        city = generate_city()
+    else:
+        current_location = current_location_load
+        world_map = world_map_load
+        city = city_load
+
+    print("Welcome to the Feywild!")
+    print("Your adventure begins in the Grove, a place of ancient magic and sudden danger.")
+    print("To start your journey and uncover the mysteries of the Feywild, you must seek guidance.")
+    print("1. Talk to Faelar Whisperwind. He is a wise guardian of the Grove and may have crucial information.")
+    print("   He can also give you your first quest, 'The Corrupted Grove', which will lead you deeper into the Feywild.")
+    print("2. Explore the surrounding areas. You may find other NPCs who can help you, or provide quests.")
+    print("\n") # Add a blank line for better spacing
+
+    player.show_stats()
+    player.inventory.append(Item("Rusty Sword", "A rusty, old sword."))
+
+    while True:
+        print("\nWhat would you like to do?")
+        print("1. Explore")
+        print("2. Interact with NPC")
+        print("3. Check Stats")
+        print("4. Fight Enemy")
+        print("5. Check Quests")
+        print("6. Enter City")
+        print("7. Save Game")
+        print("8. Exit")
+        choice = input("> ")
+
+        if choice == "1":
+            explore(player)
+        elif choice == "2":
+            location = world_map[current_location[1]][current_location[0]]
+            if location and location["npcs"]:
+                npc_name = generate_npc_name()
+                interact_npc(player, npc_name)
+            else:
+                print("There are no npcs here.")
+        elif choice == "3":
+            player.show_stats()
+            print("Inventory:")
+            for item in player.inventory:
+                print(f"- {item.name}: {item.description}")
+        elif choice == "4":
+            location = world_map[current_location[1]][current_location[0]]
+            if location and location["encounters"]:
+                enemy = create_enemy(random.choice(location["encounters"]))
+                combat(player, enemy)
+            else:
+                print("There are no enemies here.")
+        elif choice == "5":
+            player.show_quests()
+        elif choice == "6":
+            explore_city(player, city)
+        elif choice == "7":
+            save_game(player, current_location, world_map, city)
+        elif choice == "8":
+            break
+        else:
+            print("Invalid choice.")
+
