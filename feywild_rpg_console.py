@@ -21,7 +21,7 @@ class Character:
         self.inventory = []
         self.mana = mana
         self.abilities = []
-        self.quests = [] # Added quest log
+        self.quests = []  # Added quest log
 
     def attack(self, target):
         attack_roll = random.randint(1, 20) + self.strength
