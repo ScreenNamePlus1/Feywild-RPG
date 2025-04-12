@@ -15,9 +15,9 @@ def main():
 
     while True:
         if player_character is None:
-            print("Before initial menu input") #Added print
             action = input("\n1. Load Game\n2. Generate Character\n3. Delete Save\n4. Exit\nEnter your choice: ")
-            print(f"Action: {action}") #added print
+            print("After initial menu input") #moved print
+            print(f"Action: {action}")
 
             if action == "1":
                 loaded_character, loaded_location = save_load.load_game("savegame.json")
@@ -41,7 +41,7 @@ def main():
             else:
                 print("Invalid input.")
         else:
-            print("Before in game input") #added print
+            print("Before in game input")
             main_quest.main_quest(player_character, current_location)
 
 def print_character(character):
